@@ -99,10 +99,11 @@ function App() {
 
 	//User Field Submit form...
 	const handleSubmitForm = (event) => {
+		//If newUser check box checked... newUser true...then create newUser in firebase...
 		if (newUser && user.email && user.password) {
+			//Create new user with email & password...
 			firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
 				.then(result => {
-					// Signed in 
 					const newUserInfo = { ...user }
 					newUserInfo.error = '';
 					newUserInfo.successful = true;
@@ -117,11 +118,12 @@ function App() {
 					setUser(newUserInfo);
 				});
 		}
+
+		//If newUser check box unChecked... newUser false...then signIn with email & pass in firebase...
 		if (!newUser && user.email && user.password) {
 			//Sign In With User email & Password...
 			firebase.auth().signInWithEmailAndPassword(user.email, user.password)
 				.then(result => {
-					// Signed in
 					const user = result.user;
 					const newUserInfo = { ...user }
 					newUserInfo.error = '';
@@ -135,6 +137,7 @@ function App() {
 					setUser(newUserInfo);
 				});
 		}
+		// Stop browser auto load ...
 		event.preventDefault();
 	}
 
@@ -165,7 +168,7 @@ function App() {
 				}
 				<br /><br />
 				{
-					<button className='btn btn-primary ' onClick={handleFbSignIn}>SignIn with Facebook</button>
+					user.isSignedIn ? <span></span> : <button className='btn btn-primary ' onClick={handleFbSignIn}>SignIn with Facebook</button>
 				}
 				{/* /After Sign In with Google Provider... */}
 				{
@@ -178,9 +181,8 @@ function App() {
 			</div>
 
 			{/* /Sign in & Sign out form */}
-			<div className="sign-form">
+			<div className="full-form">
 				<h2> <span style={{ color: 'green' }}>{user.displayName} </span> Authentication Page</h2>
-
 
 				<form className='' action="" onSubmit={handleSubmitForm}><br />
 
@@ -198,7 +200,9 @@ function App() {
 					<input className='form-control btn btn-info ' type="submit" value={newUser ? 'Sign Up' : 'Sign in'} />
 				</form>
 				<hr />
+				{/* /error message handling... */}
 				<p style={{ color: 'red' }}>{user.error}</p>
+				{/* /Successful message handling... */}
 				{
 					user.successful && <p style={{ color: 'green' }}>User {newUser ? 'Created' : 'Logged In'} successfully</p>
 				}
