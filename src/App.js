@@ -4,7 +4,12 @@ import "firebase/auth";
 import { useState } from 'react';
 import firebaseConfig from './firebase.config';
 
-firebase.initializeApp(firebaseConfig);
+if (!firebase.apps.length) {
+	firebase.initializeApp(firebaseConfig);
+} else {
+	firebase.app();//if already initialized, use that one...
+}
+
 
 function App() {
 	//New User Registration...
@@ -60,6 +65,7 @@ function App() {
 				console.log(errorCode, errorMessage, email, credential);
 			});
 	}
+
 	//Sign Out...
 	const handleSignOut = () => {
 		firebase.auth().signOut()
@@ -69,7 +75,8 @@ function App() {
 					isSignedIn: false
 				}
 				setUser(signOutUser);
-			}).catch((error) => {
+			})
+			.catch((error) => {
 				// An error happened.
 			});
 	}
